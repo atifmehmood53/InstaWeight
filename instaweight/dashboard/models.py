@@ -42,12 +42,10 @@ class Cattle(models.Model):
     ear_tag = models.CharField(
         max_length=50, verbose_name="Ear ID", unique=True)
     birth_date = models.DateField(verbose_name="Birth Date")
-    image = models.ImageField(verbose_name='Image', default='https://picsum.photos/600')
+    image = models.ImageField(verbose_name='Image')
 
     def __str__(self):
         return f'{self.ear_tag} | {self.breed}'
-    image = models.ImageField(verbose_name='Image',
-                              default='https://picsum.photos/600')
 
     @classmethod
     def gender_distribbution(cls):

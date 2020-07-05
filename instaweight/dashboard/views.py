@@ -107,13 +107,14 @@ def dashboard(request):
 def cattle_management(request):
     form = cattle_form()
     if request.method == 'POST' and request.is_ajax():
-        form = cattle_form(request.POST)
+        print(request.FILES)
+        form = cattle_form(request.POST, files=request.FILES)
 
         if form.is_valid():
             form.save()
             form = cattle_form()
 
-            return render(request, f'{app_name}/widgets/add_cattle_form.html', context={'form': form})
+            return render(request, f'{app_name}/widgets/add_cattle_form.html', context={'form': form, "message": "Cattle Added Successfuly"})
         else:
             return render(request, f'{app_name}/widgets/add_cattle_form.html', context={'form': form}, status=400)
 

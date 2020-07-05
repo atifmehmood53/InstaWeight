@@ -1,20 +1,9 @@
-{% extends 'dashboard/pages/base.html' %}
-{% load static %}
-
-{% block extra_styles %}
-
-{% endblock extra_styles %}
-
-{% block title %}
+{% extends 'dashboard/pages/base.html' %} {% load static %} {% block extra_styles %} {% endblock extra_styles %} {% block title %}
 <title>Cattle Management</title>
-{% endblock title %}
-
-{% block main_content %}
-
-{% block script %}
+{% endblock title %} {% block main_content %} {% block script %}
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         // handelClickDetail
         $(".cattle-detail-link").click((e) => {
             const url = $(e.target).attr('href')
@@ -24,21 +13,21 @@
 
         })
 
-        $("#id_add_cattle").submit(function (e) {
-            console.log('i am called', $)
+        $("#id_add_cattle").submit(function(e) {
             e.preventDefault();
-
+            let data = new FormData(this)
             var serializedData = $(this).serialize();
-            print(serializedData)
             $.ajax({
                 type: 'POST',
                 url: "{% url 'cattle-management' %}",
-                data: serializedData,
-                success: function (response) {
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
                     console.log('success', response)
                     $("#id_add_cattle .form-container")[0].innerHTML = response
                 },
-                error: function (response) {
+                error: function(response) {
                     console.log('error', response)
                     $("#id_add_cattle .form-container")[0].innerHTML = response.responseText
                     console.log(response)
@@ -72,7 +61,6 @@
                 <div class="col">
                     <div class="form-group">
                         {{field}}
-
                     </div>
                 </div>
                 {% endfor %}
@@ -117,8 +105,7 @@
                         <td>{{ cattle.birth_date }}</td>
                         <td>{{ cattle.Age }}</td>
                         <td>{{ cattle.Status }}</td>
-                        <th><a href="{% url 'cattle_view' cattle.id %}?{{request.GET.urlencode}}" class="cattle-detail-link" data-cattle-id='{{cattle.id}}'
-                                >Edit/Details</a>
+                        <th><a href="{% url 'cattle_view' cattle.id %}?{{request.GET.urlencode}}" class="cattle-detail-link" data-cattle-id='{{cattle.id}}'>Edit/Details</a>
                         </th>
                     </tr>
                 </tbody>
@@ -134,15 +121,10 @@
 
                     <span class="current">
                         Page {{ cattles.number }} of {{ cattles.paginator.num_pages }}.
-                    </span>
-
-                    {% if cattles.has_next %}
-                    <a
-                        href="?search={{request.GET.search}}&gender={{request.GET.gender}}&page={{ cattles.next_page_number}}">next</a>
-                    <a
-                        href="?search={{request.GET.search}}&gender={{request.GET.gender}}&page={{ cattles.paginator.num_pages}}">last
-                        &raquo;</a>
-                    {% endif %}
+                    </span> {% if cattles.has_next %}
+                <a href="?search={{request.GET.search}}&gender={{request.GET.gender}}&page={{ cattles.next_page_number}}">next</a>
+                <a href="?search={{request.GET.search}}&gender={{request.GET.gender}}&page={{ cattles.paginator.num_pages}}">last
+                        &raquo;</a> {% endif %}
                 </span>
 
             </div>
@@ -152,8 +134,7 @@
 
 
     <!-- Modal -->
-    <div class="modal  fade" id="add-cattle-modal" tabindex="-1" role="dialog" aria-labelledby="add-cattle-modal-title"
-        aria-hidden="true">
+    <div class="modal  fade" id="add-cattle-modal" tabindex="-1" role="dialog" aria-labelledby="add-cattle-modal-title" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -163,7 +144,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="id_add_cattle" method="POST" autocomplete="off">
+                    <form id="id_add_cattle" enctype="multipart/form-data" method="POST" autocomplete="off">
                         {% csrf_token %}
                         <div class="form-container">
                             {% include 'dashboard/widgets/add_cattle_form.html' %}
@@ -183,8 +164,7 @@
 
 
     <!-- Weight Details Modal -->
-    <div class="modal  fade" id="weight-detail-modal" tabindex="-1" role="dialog"
-        aria-labelledby="weight-detail-modal-title" aria-hidden="true">
+    <div class="modal  fade" id="weight-detail-modal" tabindex="-1" role="dialog" aria-labelledby="weight-detail-modal-title" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">

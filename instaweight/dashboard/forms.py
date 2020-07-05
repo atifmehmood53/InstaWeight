@@ -5,7 +5,6 @@ from dashboard.models import *
 
 
 class cattle_form(forms.ModelForm):
-    image = forms.ImageField(allow_empty_file=True)
 
     class Meta:
         model = Cattle
