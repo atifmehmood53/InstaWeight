@@ -192,14 +192,15 @@ def daily_view(request, id):
 
 @login_required(login_url=login_url)
 def log_weight(request, id):
+    print(request.POST)
     if request.method == "POST":
         cattle = Cattle.objects.get(id=id)
-        weight = request.POST["weight"]
-        heart_girth = request.POST["heart_girth"]
-        diagonal_len = request.POST["diagonal_len"]
-        daily_weight = DailyWeight.objects.update_or_create(cattle=cattle, defaults={
+        weight = request.POST.get("weight", 0)
+        heart_girth = request.POST.get("heart_girth", 0)
+        diagonal_len = request.POST.get("diagonal_len", 0)
+        daily_weight = DailyWeight.objects.update_or_create(cattle=cattle, date_time__date=date.today(), defaults={
                                                             "cattle": cattle, "weight": weight, "heart_girth": heart_girth, 'diagonal_len': diagonal_len})
-        return HttpResponse("loged")
+        return redirect(reverse("cattle_view", args=[id]))
 
 
 @login_required(login_url=login_url)

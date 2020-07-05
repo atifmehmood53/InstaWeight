@@ -19,50 +19,39 @@
             <div class="konvajs-content" role="presentation" style="overflow: scroll;"></div>
         </div>
         <div class="p-2">
-            <div class="row">
-                <div class="col-6 pt-2">
-                    <div class="custom-file">
-                        <input id="image-button" type="file" class="custom-file-input" id="customFile" required />
-                        <label id="image-label" class="custom-file-label" for="customFile">Choose Image</label
-            >
-          </div>
-          <form
-            action=""
-            id="weight-form"
-            enctype="multipart/form-data"
-            method="POST"
-          >
-            {% csrf_token %}
-            <div class="custom-file my-2">
-              <input
-                type="file"
-                class="custom-file-input"
+            <form action="" id="weight-form" enctype="multipart/form-data" method="POST">
+                <div class="row">
+                    <div class="col-6 pt-2">
+                        <div class="custom-file">
+                            <input id="image-button" name="image" type="file" class="custom-file-input" id="customFile" required />
+                            <label id="image-label" class="custom-file-label" for="customFile">Choose Image</label>
+                        </div>
+                    </div>
+                </div>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="custom-file my-2">
+                            <input type="file" class="custom-file-input" name="depth-image" id="depth-image-input" required />
+                            <label id="depth-image-label" class="custom-file-label" for="depth-image-input">Choose Depth Image</label>
+                        </div>
+                    </div>
 
-                name="depth-image"
-                id="depth-image-input"
-                required
-              />
-              <label id="depth-image-label" class="custom-file-label" for="depth-image-input"
-                >Choose Depth Image</label
-              >
-            </div>
-            <button
-              id="calculate-weight"
-              type="submit"
-              class="btn btn-dark mt-2"
-            >
+                </div>
+
+                <button id="calculate-weight" type="submit" class="btn btn-dark mt-2">
               Calculate Weight
             </button>
-          </form>
+            </form>
         </div>
         <div class="col-12">
             <div class="row">
                 <div id="response" class="my-3 h4 col-6"></div>
             </div>
         </div>
-      </div>
     </div>
-    </div>
+</div>
+</div>
 </div>
 
 
@@ -87,15 +76,11 @@
         var imgLayer = new Konva.Layer();
         stage.add(imgLayer);
 
-        // Pointer's Layer
         var pointersLayer = new Konva.Layer();
         stage.add(pointersLayer);
 
-        pointersLayer.add(addPointer(stage, "Heart Gith Top", "down"));
-        pointersLayer.add(addPointer(stage, "Heart Gith Bottom", "up"));
-        pointersLayer.add(addPointer(stage, "Front Shoulder", "down"));
-        pointersLayer.add(addPointer(stage, "Pin Bone", "up"));
-
+        pointersLayer.add(addPointer(stage, "Heart Gith Top", "down", hgTop));
+        pointersLayer.add(addPointer(stage, "Heart Gith Bottom", "up", hgBottom));
         pointersLayer.draw();
 
         stage.on("click tap", function(e) {
@@ -105,12 +90,6 @@
                 pointersLayer.draw();
                 return;
             }
-            // // do nothing if clicked NOT on our rectangles
-            // if (!e.target.hasName("pointer")) {
-            //   return;
-            // }
-            // remove old transformers
-            // TODO: we can skip it if current rect is already selected
             stage.find("Transformer").destroy();
 
             // create new transformer
@@ -133,11 +112,11 @@
         imgLayer.draw();
     };
 
-    function addPointer(stage, name, direction) {
+    function addPointer(stage, name, direction, position) {
         // tooltip
         let tooltip = new Konva.Label({
-            x: 100,
-            y: 100,
+            x: position[0],
+            y: position[1],
             name: name,
             draggable: true,
             opacity: 0.75
@@ -172,7 +151,7 @@
         tooltip.on("dragend", function(e) {
             let x = e.currentTarget.attrs.x;
             let y = e.currentTarget.attrs.y;
-
+            console.log(x, y)
             if (e.currentTarget.attrs.name === "Heart Gith Top") {
                 hgTop = [x, y];
             } else if (e.currentTarget.attrs.name === "Heart Gith Bottom") {
@@ -195,8 +174,30 @@
             $("#image-label").html(e.target.files[0].name)
             reader.readAsDataURL(e.target.files[0]);
             reader.onload = function(e) {
-                // browser completed reading file - display it
-                imageObj.src = e.target.result;
+
+
+                let form = document.getElementById("weight-form");
+                let formData = new FormData(form);
+                console.log(formData, $.post)
+                $.ajax({
+                    url: "{%  url 'predict' %}",
+                    type: "post",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        jsonResponse = JSON.parse(response)
+                        hgTop = jsonResponse.hgTop
+                        hgBottom = jsonResponse.hgBottom
+                            // browser completed reading file - display it
+                        imageObj.src = e.target.result;
+                    },
+                    error: function(error) {
+                        console.log(error)
+                    }
+                });
+
+
             };
         });
 
@@ -241,7 +242,9 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
+                    console.log(response)
                     $("#response").html(response);
+
                 },
                 error: function(error) {
                     console.log(error)

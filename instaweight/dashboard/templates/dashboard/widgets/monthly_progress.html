@@ -10,7 +10,6 @@
 </div>
 
 <script>
-
     var ctx = document.getElementById('myChart1').getContext('2d');
     var chart = new Chart(ctx, {
         // The type of chart we want to create
@@ -20,24 +19,24 @@
         data: {
             labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [{
-                label: 'Monthly Progress Report 2019 ',
-                backgroundColor: 'rgb(255, 255, 255, 0.2)',
-                borderColor: 'rgb(0, 128, 128, 1)',
-                data: [10, 15, 20, 20, 30, 45, 70, 50, 35, 45, 60, 85]
-            },
-            {
-                label: 'Monthly Progress Report 2018',
-                backgroundColor: 'rgb(255, 255, 255, 0.2)',
-                borderColor: 'rgb(0, 0, 128, 1)',
-                data: [16, 12, 44, 30, 20, 40, 65, 45, 80, 92, 89, 80]
-            },
+                    label: 'Monthly Progress Report 2019 ',
+                    backgroundColor: 'rgb(255, 255, 255, 0.2)',
+                    borderColor: 'rgb(0, 128, 128, 1)',
+                    data: [10, 15, 20, 20, 30, 45, 70, 50, 35, 45, 60, 85]
+                },
+                // {
+                //     label: 'Monthly Progress Report 2018',
+                //     backgroundColor: 'rgb(255, 255, 255, 0.2)',
+                //     borderColor: 'rgb(0, 0, 128, 1)',
+                //     data: [16, 12, 44, 30, 20, 40, 65, 45, 80, 92, 89, 80]
+                // },
 
-            {
-                label: 'Monthly Progress Report 2017',
-                backgroundColor: 'rgb(255, 255, 255, 0.2)',
-                borderColor: 'rgb(128, 0, 128, 1)',
-                data: [10, 12, 22, 24, 19, 15, 14, 9, 14, 16, 22, 25]
-            }
+                // {
+                //     label: 'Monthly Progress Report 2017',
+                //     backgroundColor: 'rgb(255, 255, 255, 0.2)',
+                //     borderColor: 'rgb(128, 0, 128, 1)',
+                //     data: [10, 12, 22, 24, 19, 15, 14, 9, 14, 16, 22, 25]
+                // }
 
             ]
         },
@@ -52,5 +51,4 @@
             }
         }
     });
-
 </script>
